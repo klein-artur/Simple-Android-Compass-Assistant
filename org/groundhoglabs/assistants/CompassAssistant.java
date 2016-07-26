@@ -26,9 +26,28 @@ public class CompassAssistant implements SensorEventListener {
      * needs to implement this interface and register itself as a listener.
      */
     public interface CompassAssistantListener {
+
+        /**
+        * is getting called when the assistant evaluates a new heading.
+        * @param degrees the new degrees
+        */
         void onNewDegreesToNorth(float degrees);
+
+        /**
+        * is getting called when the assistant evaluates a new heading. This degrees are smoothed
+        * by the moving average algorythm.
+        * @param degrees the new smoothed degrees.
+        */
         void onNewSmoothedDegreesToNorth(float degrees);
+
+        /**
+        * is getting called when the compass was stopped.
+        */
         void onCompassStopped();
+
+        /*
+        * is getting called when the compass was started.
+        */
         void onCompassStarted();
     }
 
