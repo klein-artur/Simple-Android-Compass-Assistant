@@ -43,6 +43,7 @@ public class CompassActivity extends Activity implements CompassAssistant.Compas
     public static final String MESSAGE_ID_KEY = "mid";
 
     private CompassAssistant compassAssistant;
+    private float currentDegree;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,7 +79,7 @@ public class CompassActivity extends Activity implements CompassAssistant.Compas
 
         final RotateAnimation ra = new RotateAnimation(
                 currentDegree,
-                -degrees,
+                degrees,
                 Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF,
                 0.5f);
@@ -91,6 +92,8 @@ public class CompassActivity extends Activity implements CompassAssistant.Compas
                 compass.startAnimation(ra);
             }
         });
+
+        currentDegree = degrees;
 
     }
 

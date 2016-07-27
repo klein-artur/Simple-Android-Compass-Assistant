@@ -196,7 +196,7 @@ public class CompassAssistant implements SensorEventListener {
      */
     private void informListenersAboutNewDegree(float degree) {
         for (CompassAssistantListener l : this.listeners) {
-            l.onNewDegreesToNorth(degree);
+            l.onNewDegreesToNorth(-degree);
         }
     }
 
@@ -206,7 +206,7 @@ public class CompassAssistant implements SensorEventListener {
      */
     private void informListenersAboutNewSmoothedDegree(float degree) {
         for (CompassAssistantListener l : this.listeners) {
-            l.onNewSmoothedDegreesToNorth(degree);
+            l.onNewSmoothedDegreesToNorth(-degree);
         }
     }
 }
