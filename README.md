@@ -4,7 +4,7 @@ The CompassAssistant is a helper class that provides the heading of the device t
 the geographic or the magnetic north by degrees. The information can be used to rotate a UI element,
 for example a compass. 
 
-## Init an CompassAssistant
+## Init a CompassAssistant
 There are two constructors:
 
 ### Assistant without declination
