@@ -1,4 +1,4 @@
-# CompassAssitant
+# CompassAssistant
 ## Description
 The CompassAssistant is a helper class that provides the heading of the device to
 the geographic or the magnetic north by degrees. The information can be used to rotate a UI element,
