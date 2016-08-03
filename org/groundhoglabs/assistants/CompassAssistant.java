@@ -49,6 +49,7 @@ public class CompassAssistant implements SensorEventListener {
         * is getting called when the compass was started.
         */
         void onCompassStarted();
+        
     }
 
     private Context context;
@@ -63,6 +64,7 @@ public class CompassAssistant implements SensorEventListener {
     private float[] orientation = new float[3];
     private float currentDegree = 0f;
     private float currentSmoothedDegree = 0f;
+    private int currentAccuracy = 0;
 
     private float declination = 0.0f;
 
@@ -141,6 +143,28 @@ public class CompassAssistant implements SensorEventListener {
             l.onCompassStopped();
         }
     }
+    
+    
+
+    /**
+     * Returns if the magneticFieldSensor is uncalibrated and needs to be calibrated by the
+     * user.
+     * @return true, if the sensor needs to be calibrated.
+     */
+    public boolean calibrationRequired() {
+        return this.calibrationRequired(2);
+    }
+
+    /**
+     * Returns if the magneticFieldSensor is uncalibrated and needs to be calibrated by the
+     * user. You can give a level at which the compass needs to be calibrated. For levels see
+     * {@link android.hardware.SensorManager}
+     * @param level the level at which the compass needs to be calibrated. {@link android.hardware.SensorManager}
+     * @return true, if the sensor needs to be calibrated.
+     */
+    public boolean calibrationRequired(int level) {
+        return this.currentAccuracy <= level;
+    }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -172,7 +196,11 @@ public class CompassAssistant implements SensorEventListener {
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {}
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        if (sensor == magnetometer) {
+            this.currentAccuracy = accuracy;
+        }
+    }
 
     /**
      * This function is private and cleans the given degrees in reference to the old value. That
