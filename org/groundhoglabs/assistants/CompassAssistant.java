@@ -139,6 +139,14 @@ public class CompassAssistant implements SensorEventListener {
     public void stop() {
         this.sensorManager.unregisterListener(this, this.accelerometer);
         this.sensorManager.unregisterListener(this, this.magnetometer);
+        this.lastAccelerometer = new float[3];
+        this.lastMagnetometer = new float[3];
+        this.lastAccelerometerSet = false;
+        this.lastMagnetometerSet = false;
+        this.currentAccuracy = 0;
+        this.currentDegree = 0f;
+        this.currentSmoothedDegree = 0f;
+        this.moovingAverageList = new MovingAverageList(10);
         for (CompassAssistantListener l : this.listeners) {
             l.onCompassStopped();
         }
@@ -236,5 +244,47 @@ public class CompassAssistant implements SensorEventListener {
         for (CompassAssistantListener l : this.listeners) {
             l.onNewSmoothedDegreesToNorth(-degree);
         }
+    }
+
+
+    /**
+     * Calculates the bearing between two locations with the current heading of the phone.
+     * With this function you can make a view that points on the destination location if you give
+     * the current location as the first parameter.
+     * @param lat1 the latitude of the first location. This could be the current phones location
+     * @param lng1 the longitude of the first location. This could be the current phones location
+     * @param lat2 the latitude of the destination location at which to point at.
+     * @param lng2 the longitude of the destination location at which to point at.
+     * @return the smoothed degrees including the current heading of the phone.
+     */
+    public float getBearingBetweenLocations(double lat1,
+            double lng1, 
+            double lat2,
+            double lng2) {
+        return this.getBearingBetweenLocations(lat1, lng1, lat2, lng2, true);
+    }
+
+    /**
+     * Calculates the bearing between two locations with the current heading of the phone.
+     * With this function you can make a view that points on the destination location if you give
+     * the current location as the first parameter. You can choose whether the result should be
+     * smoothed or not.
+     * @param lat1 the latitude of the first location. This could be the current phones location
+     * @param lng1 the longitude of the first location. This could be the current phones location
+     * @param lat2 the latitude of the destination location at which to point at.
+     * @param lng2 the longitude of the destination location at which to point at.
+     * @param smoothed whether the result should be smoothed or not.
+     * @return the smoothed or not smoothed degrees including the current heading of the phone.
+     */
+    public float getBearingBetweenLocations(double lat1,
+            double lng1, 
+            double lat2,
+            double lng2,
+            boolean smoothed) {
+
+        double x = Math.cos(lat2) * Math.sin(lng1-lng2);
+        double y = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(lng1-lng2);
+        double bearing = Math.atan2(x, y);
+        return (-(smoothed ? this.currentSmoothedDegree : this.currentDegree) + (float)Math.toDegrees(bearing));
     }
 }

@@ -30,10 +30,34 @@ assistant.addListener(listener);
 assistant.start();
 ```
 
-The listener will now evaluate the heading of the phone to north and then it will pass the degrees
+The assistant will now evaluate the heading of the phone to north and then it will pass the degrees
 to its listeners.
 
-Don´t forget to stop your assistant if you don´t need it anymore. You can start it at every time.
+Don´t forget to stop your assistant if you don´t need it anymore. You can restart it at every time:
+
+```java
+assistant.stop();
+```
+
+## Use the bearing functionality
+The assistant can give you the bearing from one location to the other. The locations are given as latitude and
+longitude doubles. As long as the CompassAssistant isn´t started and haven´t got any heading of the device it will
+give the direct bearing between the two locations. If the assistant has a heading of the phone it will add the
+heading of the phone to the bearing. If you pass your current location as the first location and a destination
+location as the second location you can get the bearing to this point and rotate a view to show the user the bearing.
+
+The functions to get the bearing are:
+
+```java
+// the parameters are:
+// latStart, lngStart, latDestination, lngDestination
+// the result is smoothed
+assistant.getBearingBetweenLocations(47.845366, 12.543425, 48.135125, 11.581981);
+
+// the same as the first function but with the last boolean you can choose whether the
+// result should be smoothed (true) or not (false).
+assistant.getBearingBetweenLocations(47.845366, 12.543425, 48.135125, 11.581981, true);
+``` 
 
 ## Usage Example:
 
@@ -42,7 +66,7 @@ public class CompassActivity extends Activity implements CompassAssistant.Compas
 
     public static final String MESSAGE_ID_KEY = "mid";
 
-    private CompassAssistant compassAssistant;
+    private CompassAssistant CompassAssistant;
     private float currentDegree;
 
     @Override
@@ -57,16 +81,16 @@ public class CompassActivity extends Activity implements CompassAssistant.Compas
 
         // this assistant will point to the magnetic north. If you want to have a compass that points
         // to the geographic north, you have to put a location into the constructor.
-        compassAssistant = new CompassAssistant(MessageDetailActivity.this);
-        compassAssistant.addListener(MessageDetailActivity.this);
-        compassAssistant.start();
+        CompassAssistant = new CompassAssistant(MessageDetailActivity.this);
+        CompassAssistant.addListener(MessageDetailActivity.this);
+        CompassAssistant.start();
             
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        this.compassAssistant.stop();
+        this.CompassAssistant.stop();
     }
 
     @Override
@@ -94,6 +118,15 @@ public class CompassActivity extends Activity implements CompassAssistant.Compas
         });
 
         currentDegree = degrees;
+
+        /*
+        If you want you can get the bearing between two locations right here. 
+        If you do this in this function you can be sure that the compassassistant is started and
+        you will get continously new degrees:
+        
+        float bearing = assistant.getBearingBetweenLocations(currLocLat, currLocLng, destLocLat, destLocLng);
+
+        */
 
     }
 
