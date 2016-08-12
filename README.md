@@ -64,8 +64,6 @@ assistant.getBearingBetweenLocations(47.845366, 12.543425, 48.135125, 11.581981,
 ```java
 public class CompassActivity extends Activity implements CompassAssistant.CompassAssistantListener {
 
-    public static final String MESSAGE_ID_KEY = "mid";
-
     private CompassAssistant CompassAssistant;
     private float currentDegree;
 
@@ -81,8 +79,8 @@ public class CompassActivity extends Activity implements CompassAssistant.Compas
 
         // this assistant will point to the magnetic north. If you want to have a compass that points
         // to the geographic north, you have to put a location into the constructor.
-        CompassAssistant = new CompassAssistant(MessageDetailActivity.this);
-        CompassAssistant.addListener(MessageDetailActivity.this);
+        CompassAssistant = new CompassAssistant(CompassActivity.this);
+        CompassAssistant.addListener(CompassActivity.this);
         CompassAssistant.start();
             
     }
